@@ -10,6 +10,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\AuthenticationException;
+use Magento\Framework\Exception\LocalizedException;
 
 class Index extends Action
 {
@@ -69,6 +70,10 @@ class Index extends Action
     public function execute()
     {
         try {
+            if (!$this->isEnabled()) {
+                throw new LocalizedException(__('ENS is not enabled.'));
+            }
+
             if (!$this->isAllowed()) {
                 throw new AuthenticationException(__('Invalid ENS Ip Address.'));
             }
@@ -86,6 +91,14 @@ class Index extends Action
         $resultRaw->setHeader('Content-Type', 'text/xml');
         $resultRaw->setContents($response);
         return $resultRaw;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isEnabled()
+    {
+        return $this->configEns->isEnabled();
     }
 
     /**
