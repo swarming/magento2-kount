@@ -147,10 +147,10 @@ class Order
     protected function processShippingMethod(\Kount_Ris_Request_Inquiry $request, \Magento\Sales\Model\Order $order)
     {
         $shippingMethod = $order->getShippingMethod(true);
-        if ($shippingMethod->getData('carrier_code')) {
+        if ($shippingMethod && $shippingMethod->getData('carrier_code')) {
             $request->setUserDefinedField(self::FIELD_CARRIER, $shippingMethod->getData('carrier_code'));
         }
-        if ($shippingMethod->getData('method')) {
+        if ($shippingMethod && $shippingMethod->getData('method')) {
             $request->setUserDefinedField(self::FIELD_METHOD, $shippingMethod->getData('method'));
         }
     }
