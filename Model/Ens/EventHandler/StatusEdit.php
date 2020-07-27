@@ -9,7 +9,7 @@ use Swarming\Kount\Model\Ens\EventHandlerInterface;
 use Swarming\Kount\Model\RisService;
 use Swarming\Kount\Model\Order\ActionFactory as OrderActionFactory;
 
-class StatusEdit implements EventHandlerInterface
+class StatusEdit extends EventHandlerOrder implements EventHandlerInterface
 {
     const EVENT_NAME = 'WORKFLOW_STATUS_EDIT';
 
@@ -39,24 +39,29 @@ class StatusEdit implements EventHandlerInterface
     protected $logger;
 
     /**
-     * @param \Magento\Sales\Model\OrderFactory $orderFactory
-     * @param \Swarming\Kount\Model\Order\ActionFactory $orderActionFactory
+     * StatusEdit constructor.
+     * @param OrderActionFactory $orderActionFactory
      * @param \Swarming\Kount\Model\Order\Ris $orderRis
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
+     * @param \Magento\Framework\Api\SearchCriteriaInterface $criteria
+     * @param \Magento\Framework\Api\Search\FilterGroup $filterGroup
+     * @param \Magento\Framework\Api\FilterBuilder $filterBuilder
      * @param \Swarming\Kount\Model\Logger $logger
      */
     public function __construct(
-        \Magento\Sales\Model\OrderFactory $orderFactory,
         \Swarming\Kount\Model\Order\ActionFactory $orderActionFactory,
         \Swarming\Kount\Model\Order\Ris $orderRis,
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
+        \Magento\Framework\Api\SearchCriteriaInterface $criteria,
+        \Magento\Framework\Api\Search\FilterGroup $filterGroup,
+        \Magento\Framework\Api\FilterBuilder $filterBuilder,
         \Swarming\Kount\Model\Logger $logger
     ) {
-        $this->orderFactory = $orderFactory;
         $this->orderActionFactory = $orderActionFactory;
         $this->orderRis = $orderRis;
         $this->orderRepository = $orderRepository;
         $this->logger = $logger;
+        parent::__construct($orderRepository, $criteria, $filterGroup, $filterBuilder);
     }
 
     /**
@@ -84,41 +89,6 @@ class StatusEdit implements EventHandlerInterface
 
         $this->updateRisResponse($order, $ris, $newValue);
         $this->updateOrderStatus($order, $ris, $oldValue, $newValue);
-    }
-
-    /**
-     * @param \Magento\Framework\Simplexml\Element $event
-     * @return array
-     */
-    protected function fetchVars($event)
-    {
-        $eventData = $event->asArray();
-        return [
-            (empty($eventData['key'][0]) ? '' : $eventData['key'][0]),
-            (empty($eventData['key']['@']['order_number']) ? '' : $eventData['key']['@']['order_number']),
-            (empty($eventData['old_value']) ? '' : $eventData['old_value']),
-            (empty($eventData['new_value']) ? '' : $eventData['new_value'])
-        ];
-    }
-
-    /**
-     * @param string $orderId
-     * @return \Magento\Sales\Model\Order
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function loadOrder($orderId)
-    {
-        if (empty($orderId)) {
-            throw new \InvalidArgumentException('Invalid Order number.');
-        }
-
-        $order = $this->orderFactory->create()->loadByIncrementId($orderId);
-
-        if (!$order->getId()) {
-            throw new \InvalidArgumentException("Unable to locate order for: {$orderId}");
-        }
-        return $order;
     }
 
     /**
