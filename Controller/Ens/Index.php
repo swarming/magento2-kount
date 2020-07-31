@@ -77,18 +77,7 @@ class Index extends Action
             if (!$this->isAllowed()) {
                 throw new AuthenticationException(__('Invalid ENS Ip Address.'));
             }
-//            $xmlString = file_get_contents('php://input');
-            $xmlString = '<?xml version="1.0" encoding="UTF-8"?>
-               <events merchant="900410" total="1">
-                <event>
-                    <name>WORKFLOW_NOTES_ADD</name>
-                    <key order_number="000000007" site="LOCAL.AT">DM1P0JW93G28</key>
-                    <old_value></old_value>
-                    <new_value reason_code="code123">this is a sample comment7</new_value>
-                    <agent>ki.song@monkeysports.com</agent>
-                    <occurred>2020-07-01 10:33:40.153453</occurred>
-                </event>
-             </events>';
+            $xmlString = file_get_contents('php://input');
             $this->respondOnReceiptOfEvents();
             $response = $this->ensManager->handleRequest($xmlString);
             $this->logger->info($response);
