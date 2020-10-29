@@ -26,10 +26,12 @@
   },
   "autoload": {
     "files": [
-      "src/module-kount/registration.php"
+      "src/module-kount/registration.php",
+      "src/module-kount-control/registration.php"
     ],
     "psr-4": {
-      "Swarming\\Kount\\": "src/module-kount"
+      "Swarming\\Kount\\": "src/module-kount",
+      "Swarming\\KountControl\\": "src/module-kount-control"
     }
   }
 }

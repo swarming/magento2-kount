@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Created by Swarming Technology, LLC.
+ * Project: Kount
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="\Magento\Customer\Controller\Account\CreatePost">
+        <plugin name="kount_ris_call" type="\Swarming\KountControl\Plugin\Controller\Account\CreatePost" />
+    </type>
+    <type name="\Magento\Customer\Controller\Account\LoginPost">
+        <plugin name="kount_login" type="\Swarming\KountControl\Plugin\Controller\Account\LoginPost" />
+    </type>
+</config>
