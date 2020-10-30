@@ -27,12 +27,10 @@ class Event extends AbstractService implements ServiceInterface
         $userId = $this->customerSession->getCustomerId();
         // As for now in case "Challenge" decision it always send Success result to Event API
         if ($this->getLoginResult()['decision'] === self::CHALLENGE_DECISION) {
-            $payload = $this->getSuccessEventPayload($sessionId, $userId, $clientId, $this->getLoginResult());
-        } else {
-            $payload = $this->getFailedEventPayload($sessionId, $userId, $clientId);
+            return $this->getSuccessEventPayload($sessionId, $userId, $clientId, $this->getLoginResult());
         }
 
-        return $payload;
+        return $this->getFailedEventPayload($sessionId, $userId, $clientId);
     }
 
     /**

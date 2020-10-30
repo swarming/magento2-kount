@@ -55,6 +55,7 @@ class TrustedDevice extends AbstractService implements ServiceInterface
 
     /**
      * @inheritdoc
+     * @throws \Swarming\KountControl\Exception\ParamsException
      */
     public function postData(array $payload)
     {
@@ -91,12 +92,7 @@ class TrustedDevice extends AbstractService implements ServiceInterface
             $this->logger->info(__('KountControl: GET response from ' . $this->getUri() . ' got '
                 . $response->getStatusCode() . ' status code and body: ' . $responseBody));
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            if ($e->getResponse()->getStatusCode() && $e->getMessage()) {
-                $this->logger->error(__('KountControl: Response from ' . $this->getUri() . ' got '
-                    . $e->getResponse()->getStatusCode() . ' status code '
-                    . '. Payload: ' . json_encode($payload)
-                    . '. Error message: ' . $e->getMessage()));
-            }
+            $this->handleException($e, 'KountControl: Response from ', $payload);
         }
 
         // If this Trusted Device record exists, sends update request
@@ -107,12 +103,7 @@ class TrustedDevice extends AbstractService implements ServiceInterface
                 $this->logger->info(__('KountControl: PUT response from ' . $this->getUri() . ' got '
                     . $response->getStatusCode() . ' status code and body: ' . $responseBody));
             } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-                if ($e->getResponse()->getStatusCode() && $e->getMessage()) {
-                    $this->logger->error(__('KountControl: PUT response from ' . $this->getUri() . ' got '
-                        . $e->getResponse()->getStatusCode() . ' status code '
-                        . '. Payload: ' . json_encode($payload)
-                        . '. Error message: ' . $e->getMessage()));
-                }
+                $this->handleException($e, 'KountControl: PUT response from ', $payload);
             }
         } else {
             // Otherwise sends create request
@@ -122,12 +113,7 @@ class TrustedDevice extends AbstractService implements ServiceInterface
                 $this->logger->info(__('KountControl: POST response from ' . $this->getUri() . ' got '
                     . $response->getStatusCode() . ' status code and body: ' . $responseBody));
             } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-                if ($e->getResponse()->getStatusCode() && $e->getMessage()) {
-                    $this->logger->error(__('KountControl: POST response from ' . $this->getUri() . ' got '
-                        . $e->getResponse()->getStatusCode() . ' status code '
-                        . '. Payload: ' . json_encode($payload)
-                        . '. Error message: ' . $e->getMessage()));
-                }
+                $this->handleException($e, 'KountControl: POST response from ', $payload);
             }
         }
 
@@ -140,6 +126,24 @@ class TrustedDevice extends AbstractService implements ServiceInterface
         }
 
         return $response;
+    }
+
+    /**
+     * Build exception message
+     *
+     * @param $e
+     * @param $startOfMessage
+     * @param $payload
+     * @return void
+     */
+    private function handleException($e, $startOfMessage, $payload)
+    {
+        if ($e->getResponse()->getStatusCode() && $e->getMessage()) {
+            $this->logger->error(__($startOfMessage . $this->getUri() . ' got '
+                . $e->getResponse()->getStatusCode() . ' status code '
+                . '. Payload: ' . json_encode($payload)
+                . '. Error message: ' . $e->getMessage()));
+        }
     }
 
     /**
