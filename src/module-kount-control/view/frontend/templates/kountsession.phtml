@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * Created by Swarming Technology, LLC.
+ * Project: Kount
+ */
+
+/* @var $block \Swarming\Kount\Block\Checkout\DataCollector */
+?>
+<script type="text/javascript" src="<?= $block->getJsDataCollectorUrl() ?>"></script>
+<script>
+    document.getElementById('kount_session_id').value = ka.sessionId;
+</script>

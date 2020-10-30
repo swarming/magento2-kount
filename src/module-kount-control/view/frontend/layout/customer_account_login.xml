@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Created by Swarming Technology, LLC.
+ * Project: Kount
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<body>
+    <referenceContainer name="content">
+        <block class="Swarming\Kount\Block\Checkout\DataCollector" name="swarming.kount.datacollector" template="Swarming_KountControl::kountsession.phtml" cacheable="false"/>
+    </referenceContainer>
+
+    <referenceContainer name="form.additional.info">
+        <block class="Magento\Framework\View\Element\Template" name="swarming.kountcontrol.hiddeninput" template="Swarming_KountControl::kountsessionfield.phtml" cacheable="false"/>
+    </referenceContainer>
+</body>
+</page>
