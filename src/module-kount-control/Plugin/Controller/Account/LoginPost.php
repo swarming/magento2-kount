@@ -67,10 +67,13 @@ class LoginPost
      */
     public function afterExecute(HttpPostActionInterface $httpPostAction, Redirect $result)
     {
+        $this->customerSession->set2faSuccessful(true);
         $sessionId = '';
         $isSuccessful = true;
+        $isChallenge = false;
         if (isset($httpPostAction->getRequest()->getParams()['kountsessionid'])) {
             $sessionId = $httpPostAction->getRequest()->getParams()['kountsessionid'];
+            $this->customerSession->setKountSessionId($sessionId);
         }
         try {
             $this->customerLogin->login($sessionId);
@@ -86,10 +89,19 @@ class LoginPost
             $isSuccessful = false;
             $this->logoutCustomer();
             $this->logger->warning($e->getMessage());
+        } catch (
+            \Swarming\KountControl\Exception\ChallengeApiResponse $e
+        ) {
+            $isChallenge = true;
+            $this->logger->info($e->getMessage());
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->logger->error(__('KountControl: ' . $e->getMessage()));
         }
 
+        if ($isChallenge) {
+            $this->customerSession->set2faSuccessful(false);
+            return $this->httpResponse->setRedirect($this->url->getUrl('customer/account'));
+        }
         if (!$isSuccessful) {
             return $this->httpResponse->setRedirect($this->url->getUrl('customer/account/login'));
         } else {
@@ -100,7 +112,7 @@ class LoginPost
     /**
      * @return void
      */
-    private function logoutCustomer()
+    public function logoutCustomer()
     {
         if ($this->customerSession->getCustomer()->getId()) {
             $this->customerSession->destroy();

@@ -32,11 +32,6 @@ class CustomerLogin
     private $eventService;
 
     /**
-     * @var \Swarming\KountControl\Model\ControlApi\TrustedDevice
-     */
-    private $trustedDeviceService;
-
-    /**
      * @var \Swarming\KountControl\Helper\Config
      */
     private $kountControlConfig;
@@ -46,7 +41,6 @@ class CustomerLogin
      * @param \Swarming\Kount\Model\Config\Account $kountConfig
      * @param \Swarming\KountControl\Model\ControlApi\Login $loginService
      * @param \Swarming\KountControl\Model\ControlApi\Event $eventService
-     * @param \Swarming\KountControl\Model\ControlApi\TrustedDevice $trustedDeviceService
      * @param \Swarming\KountControl\Helper\Config $kountControlConfig
      */
     public function __construct(
@@ -54,14 +48,12 @@ class CustomerLogin
         \Swarming\Kount\Model\Config\Account $kountConfig,
         \Swarming\KountControl\Model\ControlApi\Login $loginService,
         \Swarming\KountControl\Model\ControlApi\Event $eventService,
-        \Swarming\KountControl\Model\ControlApi\TrustedDevice $trustedDeviceService,
         \Swarming\KountControl\Helper\Config $kountControlConfig
     ) {
         $this->customerSession = $customerSession;
         $this->kountConfig = $kountConfig;
         $this->loginService = $loginService;
         $this->eventService = $eventService;
-        $this->trustedDeviceService = $trustedDeviceService;
         $this->kountControlConfig = $kountControlConfig;
     }
 
@@ -89,27 +81,25 @@ class CustomerLogin
         }
 
         $loginResult = $this->loginService->executeApiRequest($sessionId, $clientId);
-        $this->eventService->setLoginResult($loginResult);
-        if ($loginResult['decision'] === \Swarming\KountControl\Model\ControlApi\Event::CHALLENGE_DECISION) {
+        $this->customerSession->setLoginResult($loginResult);
+        if ($loginResult['decision'] === \Swarming\KountControl\Model\ControlApi\Login::BLOCK_DECISION) {
+            $this->eventService->setLoginResult($loginResult);
+            $this->eventService->failedApiCall($sessionId, $clientId);
+            throw new \Swarming\KountControl\Exception\NegativeApiResponse(__(
+                'KountControl: API Login decision is "%1"',
+                $loginResult['decision']
+            ));
+        }
+
+        if ($loginResult['decision'] === \Swarming\KountControl\Model\ControlApi\Login::CHALLENGE_DECISION) {
             if (!isset($loginResult['deviceId'])) {
                 throw new \Swarming\KountControl\Exception\ParamsException(__(
                     'KountControl: lost POST params. API login decision is "%1". $deviceId is not set.',
                     $loginResult['decision']
                 ));
             }
-            $this->eventService->executeApiRequest($sessionId, $clientId);
-            if ($this->kountControlConfig->isTrustedDeviceEnabled()) {
-                $this->trustedDeviceService->setDeviceId($loginResult['deviceId']);
-                $this->trustedDeviceService->executeApiRequest($sessionId, $clientId);
-            }
-            throw new \Swarming\KountControl\Exception\PositiveApiResponse(__(
-                'KountControl: API Login decision is "%1"',
-                $loginResult['decision']
-            ));
-        } else {
-            $this->eventService->executeApiRequest($sessionId, $clientId);
-            throw new \Swarming\KountControl\Exception\NegativeApiResponse(__(
-                'KountControl: API Login decision is "%1"',
+            throw new \Swarming\KountControl\Exception\ChallengeApiResponse(__(
+                'KountControl: API login decision is "%1".',
                 $loginResult['decision']
             ));
         }

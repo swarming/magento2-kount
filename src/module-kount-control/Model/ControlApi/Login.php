@@ -13,6 +13,8 @@ class Login extends AbstractService implements ServiceInterface
 {
     const ENDPOINT_URI = '/login';
     const ALLOW_DECISION = "Allow";
+    const CHALLENGE_DECISION = "Challenge";
+    const BLOCK_DECISION = "Block";
 
     /**
      * @inheritdoc

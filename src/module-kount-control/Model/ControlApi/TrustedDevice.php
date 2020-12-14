@@ -13,6 +13,7 @@ class TrustedDevice extends AbstractService implements ServiceInterface
 {
     const ENDPOINT_URI = '/trusted-device';
     const TRUSTED_DEVICE = "TRUSTED";
+    const BANNED_DEVICE = "BANNED";
 
     /**
      * @var string
@@ -25,16 +26,39 @@ class TrustedDevice extends AbstractService implements ServiceInterface
     public function preparePayload($sessionId, $clientId)
     {
         $userId = $this->customerSession->getCustomerId();
+
         return [
             'body' => json_encode(
                 [
                     'clientId' => $clientId,
                     'sessionId' => $sessionId,
                     'userId' => $userId,
-                    'trustState' => self::TRUSTED_DEVICE
+                    'trustState' => $this->trustState
                 ]
             )
         ];
+    }
+
+    /**
+     * @param $sessionId
+     * @param $clientId
+     * @throws \Swarming\KountControl\Exception\NegativeApiResponse
+     */
+    public function trustedApiCall($sessionId, $clientId)
+    {
+        $this->trustState = self::TRUSTED_DEVICE;
+        $this->executeApiRequest($sessionId, $clientId);
+    }
+
+    /**
+     * @param $sessionId
+     * @param $clientId
+     * @throws \Swarming\KountControl\Exception\NegativeApiResponse
+     */
+    public function bannedApiCall($sessionId, $clientId)
+    {
+        $this->trustState = self::BANNED_DEVICE;
+        $this->executeApiRequest($sessionId, $clientId);
     }
 
     /**

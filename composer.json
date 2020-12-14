@@ -27,11 +27,13 @@
   "autoload": {
     "files": [
       "src/module-kount/registration.php",
-      "src/module-kount-control/registration.php"
+      "src/module-kount-control/registration.php",
+      "src/module-kount-2fa/registration.php"
     ],
     "psr-4": {
       "Swarming\\Kount\\": "src/module-kount",
-      "Swarming\\KountControl\\": "src/module-kount-control"
+      "Swarming\\KountControl\\": "src/module-kount-control",
+      "Swarming\\Kount2FA\\": "src/module-kount-2fa"
     }
   }
 }

@@ -12,4 +12,10 @@
     <type name="\Magento\Customer\Controller\Account\LoginPost">
         <plugin name="kount_login" type="\Swarming\KountControl\Plugin\Controller\Account\LoginPost" />
     </type>
+    <type name="\Swarming\Kount2FA\Controller\Account\Setup">
+        <plugin name="kount_2fa_setup" type="\Swarming\KountControl\Plugin\Controller\Account\TfaController" />
+    </type>
+    <type name="\Swarming\Kount2FA\Controller\Account\Authenticate">
+        <plugin name="kount_2fa_authenticate" type="\Swarming\KountControl\Plugin\Controller\Account\TfaController" />
+    </type>
 </config>

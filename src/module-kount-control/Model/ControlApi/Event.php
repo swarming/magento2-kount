@@ -12,7 +12,8 @@ use Swarming\KountControl\Api\ServiceInterface;
 class Event extends AbstractService implements ServiceInterface
 {
     const ENDPOINT_URI = '/events';
-    const CHALLENGE_DECISION = "Challenge";
+    const SUCCESS_2FA_RESULT = "SUCCESS";
+    const FAILED_2FA_RESULT = "FAILED";
 
     /**
      * @var array
@@ -20,17 +21,43 @@ class Event extends AbstractService implements ServiceInterface
     private $loginResult;
 
     /**
+     * @var string
+     */
+    private $tfaAuthenticationResult;
+
+    /**
      * @inheritdoc
      */
     public function preparePayload($sessionId, $clientId)
     {
         $userId = $this->customerSession->getCustomerId();
-        // As for now in case "Challenge" decision it always send Success result to Event API
-        if ($this->getLoginResult()['decision'] === self::CHALLENGE_DECISION) {
+        if ($this->tfaAuthenticationResult === self::SUCCESS_2FA_RESULT) {
             return $this->getSuccessEventPayload($sessionId, $userId, $clientId, $this->getLoginResult());
         }
 
         return $this->getFailedEventPayload($sessionId, $userId, $clientId);
+    }
+
+    /**
+     * @param $sessionId
+     * @param $clientId
+     * @throws \Swarming\KountControl\Exception\NegativeApiResponse
+     */
+    public function successApiCall($sessionId, $clientId)
+    {
+        $this->tfaAuthenticationResult = self::SUCCESS_2FA_RESULT;
+        $this->executeApiRequest($sessionId, $clientId);
+    }
+
+    /**
+     * @param $sessionId
+     * @param $clientId
+     * @throws \Swarming\KountControl\Exception\NegativeApiResponse
+     */
+    public function failedApiCall($sessionId, $clientId)
+    {
+        $this->tfaAuthenticationResult = self::FAILED_2FA_RESULT;
+        $this->executeApiRequest($sessionId, $clientId);
     }
 
     /**

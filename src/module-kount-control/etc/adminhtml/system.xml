@@ -21,6 +21,10 @@
                     <label>Is Trusted Device API enabled?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="2fa_failed_attempts_amount" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Amount of failed attempts to pass 2FA</label>
+                    <validate>validate-digits validate-digits-range digits-range-1-65535</validate>
+                </field>
                 <field id="sign_up_enabled" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Is Sign Up API enabled?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

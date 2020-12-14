@@ -9,6 +9,7 @@
     <module name="Swarming_KountControl">
         <sequence>
             <module name="Swarming_Kount"/>
+            <module name="Swarming_Kount2FA"/>
         </sequence>
     </module>
 </config>
