@@ -54,22 +54,6 @@ class Authenticate extends Action
     }
 
     /**
-     * @param RequestInterface $request
-     * @return ResponseInterface
-     * @throws NotFoundException
-     */
-    public function dispatch(RequestInterface $request)
-    {
-        $loginUrl = $this->_objectManager->get(\Magento\Customer\Model\Url::class)->getLoginUrl();
-
-        if (!$this->customerSession->authenticate($loginUrl)) {
-            $this->_actionFlag->set('', self::FLAG_NO_DISPATCH, true);
-        }
-
-        return parent::dispatch($request);
-    }
-
-    /**
      * @return ResponseInterface|ResultInterface|void
      */
     public function execute()
