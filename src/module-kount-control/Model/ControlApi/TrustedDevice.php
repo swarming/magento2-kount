@@ -21,6 +21,11 @@ class TrustedDevice extends AbstractService implements ServiceInterface
     private $deviceId;
 
     /**
+     * @var string
+     */
+    private $trustState;
+
+    /**
      * @inheritdoc
      */
     public function preparePayload($sessionId, $clientId)

@@ -16,7 +16,7 @@ use Swarming\Kount2FA\Model\SecretFactory;
 
 class Reset2FAGoogle extends GenericButton implements ButtonProviderInterface
 {
-    private const ADMIN_AUTHENTICATOR_RESET_PATH = 'kount2fa/authenticator/reset';
+    const ADMIN_AUTHENTICATOR_RESET_PATH = 'kount2fa/authenticator/reset';
 
     /**
      * @var SecretFactory

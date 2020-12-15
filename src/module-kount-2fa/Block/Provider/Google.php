@@ -20,7 +20,7 @@ use Swarming\Kount2FA\Model\SecretFactory;
 
 class Google extends Template
 {
-    private const SESSION_KEY = 'google_authentication';
+    const SESSION_KEY = 'google_authentication';
 
     /**
      * @var Session

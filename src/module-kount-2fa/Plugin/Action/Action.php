@@ -19,14 +19,14 @@ use Swarming\Kount2FA\Model\SecretFactory;
 
 class Action
 {
-    private const SWARMING_KOUNT2FA_GENERAL_ENABLE = 'swarming_kount2fa/general/enable';
+    const SWARMING_KOUNT2FA_GENERAL_ENABLE = 'swarming_kount2fa/general/enable';
 
-    private const KOUNT_2_FA_ACCOUNT_SETUP_ROUTE = 'swarming_kount2fa_account_setup';
-    private const KOUNT_2_FA_ACCOUNT_AUTHENTICATE_ROUTE = 'swarming_kount2fa_account_authenticate';
-    private const CUSTOMER_ACCOUNT_LOGOUT_ROUTE = 'customer_account_logout';
+    const KOUNT_2_FA_ACCOUNT_SETUP_ROUTE = 'swarming_kount2fa_account_setup';
+    const KOUNT_2_FA_ACCOUNT_AUTHENTICATE_ROUTE = 'swarming_kount2fa_account_authenticate';
+    const CUSTOMER_ACCOUNT_LOGOUT_ROUTE = 'customer_account_logout';
 
-    private const KOUNT_2_FA_ACCOUNT_SETUP_PATH = 'kount2fa/account/setup';
-    private const KOUNT_2_FA_ACCOUNT_AUTHENTICATE_PATH = 'kount2fa/account/authenticate';
+    const KOUNT_2_FA_ACCOUNT_SETUP_PATH = 'kount2fa/account/setup';
+    const KOUNT_2_FA_ACCOUNT_AUTHENTICATE_PATH = 'kount2fa/account/authenticate';
 
     /**
      * @var ScopeConfigInterface
@@ -151,12 +151,12 @@ class Action
      */
     private function getAllowedRoutes(Customer $customer)
     {
+        $routes[] = self::CUSTOMER_ACCOUNT_LOGOUT_ROUTE;
         if ($this->is2faConfiguredForCustomer($customer)) {
             $routes = [self::KOUNT_2_FA_ACCOUNT_AUTHENTICATE_ROUTE];
         } else {
             $routes = [self::KOUNT_2_FA_ACCOUNT_SETUP_ROUTE];
         }
-        $routes[] = self::CUSTOMER_ACCOUNT_LOGOUT_ROUTE;
 
         return $routes;
     }

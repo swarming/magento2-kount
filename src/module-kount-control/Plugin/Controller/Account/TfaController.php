@@ -59,9 +59,7 @@ class TfaController
     }
 
     /**
-     * Checks if 2FA succeeded after 2FA /setup or /authenticate controller's call
-     *
-     * @return Redirect
+     * Checks if 2FA succeeded after /setup or /authenticate controller's call of Kount2FA module
      */
     public function afterExecute()
     {

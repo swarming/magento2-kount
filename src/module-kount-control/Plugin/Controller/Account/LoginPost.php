@@ -75,20 +75,25 @@ class LoginPost
             $sessionId = $httpPostAction->getRequest()->getParams()['kountsessionid'];
             $this->customerSession->setKountSessionId($sessionId);
         }
+        // Start work with Login API and Event API
         try {
             $this->customerLogin->login($sessionId);
+          // Exit from API workflow if KountControl not configured properly or got "Allow" Login API decision
         } catch (
             \Swarming\KountControl\Exception\ConfigException
             | \Swarming\KountControl\Exception\PositiveApiResponse $e
         ) {
             $this->logger->info($e->getMessage());
+          // Exit from API workflow if it not has all required params for API call or got "Block" Login API decision
         } catch (
             \Swarming\KountControl\Exception\ParamsException
             | \Swarming\KountControl\Exception\NegativeApiResponse $e
         ) {
             $isSuccessful = false;
+            // Log out customer in this case
             $this->logoutCustomer();
             $this->logger->warning($e->getMessage());
+          // Exit from API workflow if it got "Challenge" Login API decision and need 2FA
         } catch (
             \Swarming\KountControl\Exception\ChallengeApiResponse $e
         ) {
@@ -98,10 +103,12 @@ class LoginPost
             $this->logger->error(__('KountControl: ' . $e->getMessage()));
         }
 
+        // Specifies the need for 2FA
         if ($isChallenge) {
             $this->customerSession->set2faSuccessful(false);
             return $this->httpResponse->setRedirect($this->url->getUrl('customer/account'));
         }
+        // Redirect to customer login page in case of failed API call
         if (!$isSuccessful) {
             return $this->httpResponse->setRedirect($this->url->getUrl('customer/account/login'));
         } else {

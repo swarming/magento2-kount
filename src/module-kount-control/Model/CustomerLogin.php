@@ -61,16 +61,15 @@ class CustomerLogin
      * Goes through KountControl diagram and initiate API requests to KountControl
      *
      * @param $sessionId
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Swarming\KountControl\Exception\ChallengeApiResponse
      * @throws \Swarming\KountControl\Exception\ConfigException
      * @throws \Swarming\KountControl\Exception\NegativeApiResponse
      * @throws \Swarming\KountControl\Exception\ParamsException
-     * @throws \Swarming\KountControl\Exception\PositiveApiResponse
      */
     public function login($sessionId)
     {
         if (!$this->kountControlConfig->isLoginServiceEnabled()) {
-            throw new \Swarming\KountControl\Exception\ConfigException(__('KountControl: Login service disable'));
+            throw new \Swarming\KountControl\Exception\ConfigException(__('KountControl: Login service disabled'));
         }
 
         $userId = $this->customerSession->getCustomerId();

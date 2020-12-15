@@ -68,7 +68,7 @@ class Customer2FA
     public function twoFactorAuthenticate($result)
     {
         if (!$this->kountControlConfig->isTrustedDeviceEnabled()) {
-            throw new \Swarming\KountControl\Exception\ConfigException(__('KountControl: Login service disable'));
+            throw new \Swarming\KountControl\Exception\ConfigException(__('KountControl: Login service disabled'));
         }
 
         $userId = $this->customerSession->getCustomerId();

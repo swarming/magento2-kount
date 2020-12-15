@@ -9,7 +9,6 @@ namespace Swarming\Kount2FA\Model;
 
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
-use Swarming\Kount2FA\Api\Data\SecretInterface;
 use Swarming\Kount2FA\Model\ResourceModel\Secret as SecretResourceModel;
 use Swarming\Kount2FA\Model\ResourceModel\Secret\Collection as SecretCollection;
 
@@ -17,9 +16,9 @@ use Swarming\Kount2FA\Model\ResourceModel\Secret\Collection as SecretCollection;
  * @method SecretResourceModel getResource()
  * @method SecretCollection getCollection()
  */
-class Secret extends AbstractModel implements SecretInterface, IdentityInterface
+class Secret extends AbstractModel implements IdentityInterface
 {
-    private const CACHE_TAG = 'swarming_kount2fa_secret';
+    const CACHE_TAG = 'swarming_kount2fa_secret';
     protected $_cacheTag = 'swarming_kount2fa_secret';
     protected $_eventPrefix = 'swarming_kount2fa_secret';
 
