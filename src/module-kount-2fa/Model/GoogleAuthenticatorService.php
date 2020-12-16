@@ -24,7 +24,6 @@ class GoogleAuthenticatorService extends GoogleAuthenticator
     public function getQrCodeEndroid(string $name, string $secret, $title = null, $params = [])
     {
         $size = !empty($params['size']) && (int) $params['size'] > 0 ? (int) $params['size'] : 200;
-        //$level = !empty($params['level']) && array_search($params['level'], ['L', 'M', 'Q', 'H']) !== false ? $params['level'] : 'M';
 
         $text = sprintf('otpauth://totp/%s?secret=%s', $name, $secret);
         if (true === is_string($title)) {
