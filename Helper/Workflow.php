@@ -1,26 +1,26 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Helper;
+namespace Kount\Ris\Helper;
 
 use Magento\Framework\App\Area;
 
 class Workflow
 {
     /**
-     * @var \Swarming\Kount\Model\Config\Account
+     * @var \Kount\Ris\Model\Config\Account
      */
     protected $configAccount;
 
     /**
-     * @var \Swarming\Kount\Model\Config\PaymentMethods
+     * @var \Kount\Ris\Model\Config\PaymentMethods
      */
     protected $configPaymentMethods;
 
     /**
-     * @var \Swarming\Kount\Model\Config\Admin
+     * @var \Kount\Ris\Model\Config\Admin
      */
     protected $configAdmin;
 
@@ -30,23 +30,23 @@ class Workflow
     protected $appState;
 
     /**
-     * @var \Swarming\Kount\Model\Logger
+     * @var \Kount\Ris\Model\Logger
      */
     protected $logger;
 
     /**
-     * @param \Swarming\Kount\Model\Config\Account $configAccount
-     * @param \Swarming\Kount\Model\Config\PaymentMethods $configPaymentMethods
-     * @param \Swarming\Kount\Model\Config\Admin $configAdmin
+     * @param \Kount\Ris\Model\Config\Account $configAccount
+     * @param \Kount\Ris\Model\Config\PaymentMethods $configPaymentMethods
+     * @param \Kount\Ris\Model\Config\Admin $configAdmin
      * @param \Magento\Framework\App\State $appState
-     * @param \Swarming\Kount\Model\Logger $logger
+     * @param \Kount\Ris\Model\Logger $logger
      */
     public function __construct(
-        \Swarming\Kount\Model\Config\Account $configAccount,
-        \Swarming\Kount\Model\Config\PaymentMethods $configPaymentMethods,
-        \Swarming\Kount\Model\Config\Admin $configAdmin,
+        \Kount\Ris\Model\Config\Account $configAccount,
+        \Kount\Ris\Model\Config\PaymentMethods $configPaymentMethods,
+        \Kount\Ris\Model\Config\Admin $configAdmin,
         \Magento\Framework\App\State $appState,
-        \Swarming\Kount\Model\Logger $logger
+        \Kount\Ris\Model\Logger $logger
     ) {
         $this->configAccount = $configAccount;
         $this->configPaymentMethods = $configPaymentMethods;

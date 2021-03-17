@@ -1,14 +1,14 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Model\Ris;
+namespace Kount\Ris\Model\Ris;
 
 class Sender
 {
     /**
-     * @var \Swarming\Kount\Model\Config\Account
+     * @var \Kount\Ris\Model\Config\Account
      */
     protected $configAccount;
 
@@ -18,26 +18,26 @@ class Sender
     protected $storeManager;
 
     /**
-     * @var \Swarming\Kount\Helper\Data
+     * @var \Kount\Ris\Helper\Data
      */
     protected $helperData;
 
     /**
-     * @var \Swarming\Kount\Model\Logger
+     * @var \Kount\Ris\Model\Logger
      */
     protected $logger;
 
     /**
-     * @param \Swarming\Kount\Model\Config\Account $configAccount
+     * @param \Kount\Ris\Model\Config\Account $configAccount
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Swarming\Kount\Helper\Data $helperData
-     * @param \Swarming\Kount\Model\Logger $logger
+     * @param \Kount\Ris\Helper\Data $helperData
+     * @param \Kount\Ris\Model\Logger $logger
      */
     public function __construct(
-        \Swarming\Kount\Model\Config\Account $configAccount,
+        \Kount\Ris\Model\Config\Account $configAccount,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Swarming\Kount\Helper\Data $helperData,
-        \Swarming\Kount\Model\Logger $logger
+        \Kount\Ris\Helper\Data $helperData,
+        \Kount\Ris\Model\Logger $logger
     ) {
         $this->configAccount = $configAccount;
         $this->storeManager = $storeManager;

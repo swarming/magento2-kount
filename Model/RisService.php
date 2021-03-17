@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Model;
+namespace Kount\Ris\Model;
 
 use Magento\Sales\Model\Order;
 use Magento\Framework\Exception\LocalizedException;
@@ -22,50 +22,50 @@ class RisService
     const MACK_NO = 'N';
 
     /**
-     * @var \Swarming\Kount\Model\Ris\Inquiry\Builder
+     * @var \Kount\Ris\Model\Ris\Inquiry\Builder
      */
     protected $inquiryBuilder;
 
     /**
-     * @var \Swarming\Kount\Model\Ris\Update\Builder
+     * @var \Kount\Ris\Model\Ris\Update\Builder
      */
     protected $updateBuilder;
 
     /**
-     * @var \Swarming\Kount\Model\Ris\Sender
+     * @var \Kount\Ris\Model\Ris\Sender
      */
     protected $requestSender;
 
     /**
-     * @var \Swarming\Kount\Model\Order\Ris
+     * @var \Kount\Ris\Model\Order\Ris
      */
     protected $orderRis;
 
     /**
-     * @var \Swarming\Kount\Model\Lib\LoggerFactory
+     * @var \Kount\Ris\Model\Lib\LoggerFactory
      */
     protected $loggerFactory;
 
     /**
-     * @var \Swarming\Kount\Model\Logger
+     * @var \Kount\Ris\Model\Logger
      */
     protected $logger;
 
     /**
-     * @param \Swarming\Kount\Model\Ris\Inquiry\Builder $inquiryBuilder
-     * @param \Swarming\Kount\Model\Ris\Update\Builder $updateBuilder
-     * @param \Swarming\Kount\Model\Ris\Sender $requestSender
-     * @param \Swarming\Kount\Model\Order\Ris $orderRis
-     * @param \Swarming\Kount\Model\Lib\LoggerFactory $loggerFactory
-     * @param \Swarming\Kount\Model\Logger $logger
+     * @param \Kount\Ris\Model\Ris\Inquiry\Builder $inquiryBuilder
+     * @param \Kount\Ris\Model\Ris\Update\Builder $updateBuilder
+     * @param \Kount\Ris\Model\Ris\Sender $requestSender
+     * @param \Kount\Ris\Model\Order\Ris $orderRis
+     * @param \Kount\Ris\Model\Lib\LoggerFactory $loggerFactory
+     * @param \Kount\Ris\Model\Logger $logger
      */
     public function __construct(
-        \Swarming\Kount\Model\Ris\Inquiry\Builder $inquiryBuilder,
-        \Swarming\Kount\Model\Ris\Update\Builder $updateBuilder,
-        \Swarming\Kount\Model\Ris\Sender $requestSender,
-        \Swarming\Kount\Model\Order\Ris $orderRis,
-        \Swarming\Kount\Model\Lib\LoggerFactory $loggerFactory,
-        \Swarming\Kount\Model\Logger $logger
+        \Kount\Ris\Model\Ris\Inquiry\Builder $inquiryBuilder,
+        \Kount\Ris\Model\Ris\Update\Builder $updateBuilder,
+        \Kount\Ris\Model\Ris\Sender $requestSender,
+        \Kount\Ris\Model\Order\Ris $orderRis,
+        \Kount\Ris\Model\Lib\LoggerFactory $loggerFactory,
+        \Kount\Ris\Model\Logger $logger
     ) {
         $this->inquiryBuilder = $inquiryBuilder;
         $this->updateBuilder = $updateBuilder;

@@ -1,14 +1,14 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Model\Ris\Inquiry\Builder\Payment;
+namespace Kount\Ris\Model\Ris\Inquiry\Builder\Payment;
 
-use Swarming\Kount\Model\Ris\Base\Builder\PaymentInterface;
+use Kount\Ris\Model\Ris\Base\Builder\PaymentInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 
-class PaypalPayflowPro extends \Swarming\Kount\Model\Ris\Update\Builder\Payment\PaypalPayflowPro implements PaymentInterface
+class PaypalPayflowPro extends \Kount\Ris\Model\Ris\Update\Builder\Payment\PaypalPayflowPro implements PaymentInterface
 {
     /**
      * @param \Kount_Ris_Request|\Kount_Ris_Request_Inquiry $request

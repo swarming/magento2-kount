@@ -1,26 +1,26 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Model\Order\Action;
+namespace Kount\Ris\Model\Order\Action;
 
 use Magento\Sales\Model\Order;
-use Swarming\Kount\Model\Order\ActionInterface;
-use Swarming\Kount\Model\Order\Ris as OrderRis;
+use Kount\Ris\Model\Order\ActionInterface;
+use Kount\Ris\Model\Order\Ris as OrderRis;
 
 class Review implements ActionInterface
 {
     /**
-     * @var \Swarming\Kount\Model\Logger
+     * @var \Kount\Ris\Model\Logger
      */
     protected $logger;
 
     /**
-     * @param \Swarming\Kount\Model\Logger $logger
+     * @param \Kount\Ris\Model\Logger $logger
      */
     public function __construct(
-        \Swarming\Kount\Model\Logger $logger
+        \Kount\Ris\Model\Logger $logger
     ) {
         $this->logger = $logger;
     }

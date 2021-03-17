@@ -3,7 +3,7 @@
  * Copyright (c) 2020 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Model\Ens\EventHandler;
+namespace Kount\Ris\Model\Ens\EventHandler;
 
 /**
  * Parent class for WORKFLOW events. The class contains common methods.

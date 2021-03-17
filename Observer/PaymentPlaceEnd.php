@@ -1,53 +1,53 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Observer;
+namespace Kount\Ris\Observer;
 
 use Magento\Framework\Event\Observer;
 
 class PaymentPlaceEnd implements \Magento\Framework\Event\ObserverInterface
 {
     /**
-     * @var \Swarming\Kount\Helper\Workflow
+     * @var \Kount\Ris\Helper\Workflow
      */
     protected $helperWorkflow;
 
     /**
-     * @var \Swarming\Kount\Model\Config\Workflow
+     * @var \Kount\Ris\Model\Config\Workflow
      */
     protected $configWorkflow;
 
     /**
-     * @var \Swarming\Kount\Model\WorkflowFactory
+     * @var \Kount\Ris\Model\WorkflowFactory
      */
     protected $workflowFactory;
 
     /**
-     * @var \Swarming\Kount\Model\Observer\ConditionInterface
+     * @var \Kount\Ris\Model\Observer\ConditionInterface
      */
     protected $condition;
 
     /**
-     * @var \Swarming\Kount\Model\Logger
+     * @var \Kount\Ris\Model\Logger
      */
     protected $logger;
 
     /**
-     * @param \Swarming\Kount\Helper\Workflow $helperWorkflow
-     * @param \Swarming\Kount\Model\Config\Workflow $configWorkflow
-     * @param \Swarming\Kount\Model\WorkflowFactory $workflowFactory
-     * @param \Swarming\Kount\Model\Observer\ConditionInterface $condition
-     * @param \Swarming\Kount\Model\Logger $logger
+     * @param \Kount\Ris\Helper\Workflow $helperWorkflow
+     * @param \Kount\Ris\Model\Config\Workflow $configWorkflow
+     * @param \Kount\Ris\Model\WorkflowFactory $workflowFactory
+     * @param \Kount\Ris\Model\Observer\ConditionInterface $condition
+     * @param \Kount\Ris\Model\Logger $logger
      * @param array $allowedMethods
      */
     public function __construct(
-        \Swarming\Kount\Helper\Workflow $helperWorkflow,
-        \Swarming\Kount\Model\Config\Workflow $configWorkflow,
-        \Swarming\Kount\Model\WorkflowFactory $workflowFactory,
-        \Swarming\Kount\Model\Observer\ConditionInterface $condition,
-        \Swarming\Kount\Model\Logger $logger,
+        \Kount\Ris\Helper\Workflow $helperWorkflow,
+        \Kount\Ris\Model\Config\Workflow $configWorkflow,
+        \Kount\Ris\Model\WorkflowFactory $workflowFactory,
+        \Kount\Ris\Model\Observer\ConditionInterface $condition,
+        \Kount\Ris\Model\Logger $logger,
         array $allowedMethods = []
     ) {
         $this->helperWorkflow = $helperWorkflow;

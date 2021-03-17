@@ -1,25 +1,25 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Plugin\Sales\Payment;
+namespace Kount\Ris\Plugin\Sales\Payment;
 
 use Magento\Sales\Model\Order;
-use Swarming\Kount\Model\Order\Ris as OrderRis;
+use Kount\Ris\Model\Order\Ris as OrderRis;
 
 class RegisterCaptureNotificationCommand
 {
     /**
-     * @var \Swarming\Kount\Model\Config\Workflow
+     * @var \Kount\Ris\Model\Config\Workflow
      */
     private $configWorkflow;
 
     /**
-     * @param \Swarming\Kount\Model\Config\Workflow $configWorkflow
+     * @param \Kount\Ris\Model\Config\Workflow $configWorkflow
      */
     public function __construct(
-        \Swarming\Kount\Model\Config\Workflow $configWorkflow
+        \Kount\Ris\Model\Config\Workflow $configWorkflow
     ) {
         $this->configWorkflow = $configWorkflow;
     }
