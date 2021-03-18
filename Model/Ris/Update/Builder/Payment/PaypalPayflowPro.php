@@ -1,4 +1,4 @@
-w<?php
+<?php
 /**
  * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
