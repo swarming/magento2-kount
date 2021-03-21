@@ -1,15 +1,19 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Model\Ens\EventHandler;
+namespace Kount\Ris\Model\Ens\EventHandler;
 
-use Swarming\Kount\Model\Ens\EventHandlerInterface;
-use Swarming\Kount\Model\RisService;
-use Swarming\Kount\Model\Order\ActionFactory as OrderActionFactory;
+use Kount\Ris\Model\Ens\EventHandlerInterface;
+use Kount\Ris\Model\RisService;
+use Kount\Ris\Model\Order\ActionFactory as OrderActionFactory;
 
-class StatusEdit implements EventHandlerInterface
+/**
+ * Class StatusEdit
+ * @package Kount\Ris\Model\Ens\EventHandler
+ */
+class StatusEdit extends EventHandlerOrder implements EventHandlerInterface
 {
     const EVENT_NAME = 'WORKFLOW_STATUS_EDIT';
 
@@ -19,12 +23,12 @@ class StatusEdit implements EventHandlerInterface
     protected $orderFactory;
 
     /**
-     * @var \Swarming\Kount\Model\Order\ActionFactory
+     * @var \Kount\Ris\Model\Order\ActionFactory
      */
     protected $orderActionFactory;
 
     /**
-     * @var \Swarming\Kount\Model\Order\Ris
+     * @var \Kount\Ris\Model\Order\Ris
      */
     protected $orderRis;
 
@@ -34,29 +38,29 @@ class StatusEdit implements EventHandlerInterface
     protected $orderRepository;
 
     /**
-     * @var \Swarming\Kount\Model\Logger
+     * @var \Kount\Ris\Model\Logger
      */
     protected $logger;
 
     /**
-     * @param \Magento\Sales\Model\OrderFactory $orderFactory
-     * @param \Swarming\Kount\Model\Order\ActionFactory $orderActionFactory
-     * @param \Swarming\Kount\Model\Order\Ris $orderRis
+     * @param OrderActionFactory $orderActionFactory
+     * @param \Kount\Ris\Model\Order\Ris $orderRis
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
-     * @param \Swarming\Kount\Model\Logger $logger
+     * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param \Kount\Ris\Model\Logger $logger
      */
     public function __construct(
-        \Magento\Sales\Model\OrderFactory $orderFactory,
-        \Swarming\Kount\Model\Order\ActionFactory $orderActionFactory,
-        \Swarming\Kount\Model\Order\Ris $orderRis,
+        \Kount\Ris\Model\Order\ActionFactory $orderActionFactory,
+        \Kount\Ris\Model\Order\Ris $orderRis,
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
-        \Swarming\Kount\Model\Logger $logger
+        \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
+        \Kount\Ris\Model\Logger $logger
     ) {
-        $this->orderFactory = $orderFactory;
         $this->orderActionFactory = $orderActionFactory;
         $this->orderRis = $orderRis;
         $this->orderRepository = $orderRepository;
         $this->logger = $logger;
+        parent::__construct($orderRepository, $searchCriteriaBuilder);
     }
 
     /**
@@ -64,7 +68,7 @@ class StatusEdit implements EventHandlerInterface
      */
     public function process($event)
     {
-        list ($transactionId, $orderId, $oldValue, $newValue) = $this->fetchVars($event);
+        list($transactionId, $orderId, $oldValue, $newValue) = $this->fetchVars($event);
 
         $this->logger->info('ENS Event Details');
         $this->logger->info('Name: ' . self::EVENT_NAME);
@@ -87,42 +91,7 @@ class StatusEdit implements EventHandlerInterface
     }
 
     /**
-     * @param \Magento\Framework\Simplexml\Element $event
-     * @return array
-     */
-    protected function fetchVars($event)
-    {
-        $eventData = $event->asArray();
-        return [
-            (empty($eventData['key'][0]) ? '' : $eventData['key'][0]),
-            (empty($eventData['key']['@']['order_number']) ? '' : $eventData['key']['@']['order_number']),
-            (empty($eventData['old_value']) ? '' : $eventData['old_value']),
-            (empty($eventData['new_value']) ? '' : $eventData['new_value'])
-        ];
-    }
-
-    /**
-     * @param string $orderId
-     * @return \Magento\Sales\Model\Order
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function loadOrder($orderId)
-    {
-        if (empty($orderId)) {
-            throw new \InvalidArgumentException('Invalid Order number.');
-        }
-
-        $order = $this->orderFactory->create()->loadByIncrementId($orderId);
-
-        if (!$order->getId()) {
-            throw new \InvalidArgumentException("Unable to locate order for: {$orderId}");
-        }
-        return $order;
-    }
-
-    /**
-     * @param \Swarming\Kount\Api\Data\RisInterface $ris
+     * @param \Kount\Ris\Api\Data\RisInterface $ris
      * @param int $transactionId
      * @return bool
      *
@@ -140,7 +109,8 @@ class StatusEdit implements EventHandlerInterface
         }
 
         if ($ris->getTransactionId() !== $transactionId) {
-            throw new \InvalidArgumentException('Transaction ID does not match order, event must be for discarded version of order!');
+            throw new \InvalidArgumentException('Transaction ID does not match order,
+                event must be for discarded version of order!');
         }
 
         return true;
@@ -161,7 +131,7 @@ class StatusEdit implements EventHandlerInterface
     /**
      * @param string $oldStatus
      * @param \Magento\Sales\Model\Order $order
-     * @param \Swarming\Kount\Api\Data\RisInterface $ris
+     * @param \Kount\Ris\Api\Data\RisInterface $ris
      * @return bool
      */
     protected function isAllowedAction($oldStatus, $order, $ris)
@@ -190,7 +160,7 @@ class StatusEdit implements EventHandlerInterface
 
     /**
      * @param \Magento\Sales\Model\Order $order
-     * @param \Swarming\Kount\Api\Data\RisInterface $ris
+     * @param \Kount\Ris\Api\Data\RisInterface $ris
      * @param string $status
      */
     protected function updateRisResponse($order, $ris, $status)
@@ -202,7 +172,7 @@ class StatusEdit implements EventHandlerInterface
 
     /**
      * @param \Magento\Sales\Model\Order $order
-     * @param \Swarming\Kount\Api\Data\RisInterface $ris
+     * @param \Kount\Ris\Api\Data\RisInterface $ris
      * @param string $oldStatus
      * @param string $newStatus
      */
@@ -230,7 +200,8 @@ class StatusEdit implements EventHandlerInterface
      */
     protected function approveOrder($order)
     {
-        $this->logger->info('Kount status transitioned from review to allow. Order: ' . $order->getIncrementId());
+        $this->logger->info('Kount status transitioned from review to allow. Order: '
+            . $order->getIncrementId());
 
         $this->orderActionFactory->create(OrderActionFactory::RESTORE)->process($order);
         $this->orderRepository->save($order);
@@ -241,7 +212,8 @@ class StatusEdit implements EventHandlerInterface
      */
     protected function declineOrder($order)
     {
-        $this->logger->info('Kount status transitioned from review to decline. Order: ' . $order->getIncrementId());
+        $this->logger->info('Kount status transitioned from review to decline. Order: '
+            . $order->getIncrementId());
 
         $this->orderActionFactory->create(OrderActionFactory::RESTORE)->process($order);
         $this->orderRepository->save($order);

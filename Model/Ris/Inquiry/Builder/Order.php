@@ -1,13 +1,13 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Model\Ris\Inquiry\Builder;
+namespace Kount\Ris\Model\Ris\Inquiry\Builder;
 
 use Magento\Framework\App\Area;
 use Magento\Framework\App\ObjectManager;
-use Swarming\Kount\Model\Config\Account as ConfigAccount;
+use Kount\Ris\Model\Config\Account as ConfigAccount;
 
 class Order
 {
@@ -34,17 +34,17 @@ class Order
     protected $directoryHelper;
 
     /**
-     * @var \Swarming\Kount\Model\Ris\Inquiry\Builder\Order\CartItemFactory
+     * @var \Kount\Ris\Model\Ris\Inquiry\Builder\Order\CartItemFactory
      */
     protected $cartItemFactory;
 
     /**
-     * @var \Swarming\Kount\Model\Config\Account
+     * @var \Kount\Ris\Model\Config\Account
      */
     protected $configAccount;
 
     /**
-     * @var \Swarming\Kount\Model\Config\PhoneToWeb
+     * @var \Kount\Ris\Model\Config\PhoneToWeb
      */
     protected $configPhoneToWeb;
 
@@ -54,7 +54,7 @@ class Order
     protected $httpHeader;
 
     /**
-     * @var \Swarming\Kount\Model\Logger
+     * @var \Kount\Ris\Model\Logger
      */
     protected $logger;
 
@@ -62,21 +62,21 @@ class Order
      * @param \Magento\Framework\App\State $appState
      * @param \Magento\Customer\Model\CustomerRegistry $customerRegistry
      * @param \Magento\Directory\Helper\Data $directoryHelper
-     * @param \Swarming\Kount\Model\Ris\Inquiry\Builder\Order\CartItemFactory $cartItemFactory
-     * @param \Swarming\Kount\Model\Config\PhoneToWeb $configPhoneToWeb
+     * @param \Kount\Ris\Model\Ris\Inquiry\Builder\Order\CartItemFactory $cartItemFactory
+     * @param \Kount\Ris\Model\Config\PhoneToWeb $configPhoneToWeb
      * @param \Magento\Framework\HTTP\Header $httpHeader
-     * @param \Swarming\Kount\Model\Logger $logger
-     * @param \Swarming\Kount\Model\Config\Account|null $configAccount
+     * @param \Kount\Ris\Model\Logger $logger
+     * @param \Kount\Ris\Model\Config\Account|null $configAccount
      */
     public function __construct(
         \Magento\Framework\App\State $appState,
         \Magento\Customer\Model\CustomerRegistry $customerRegistry,
         \Magento\Directory\Helper\Data $directoryHelper,
-        \Swarming\Kount\Model\Ris\Inquiry\Builder\Order\CartItemFactory $cartItemFactory,
-        \Swarming\Kount\Model\Config\PhoneToWeb $configPhoneToWeb,
+        \Kount\Ris\Model\Ris\Inquiry\Builder\Order\CartItemFactory $cartItemFactory,
+        \Kount\Ris\Model\Config\PhoneToWeb $configPhoneToWeb,
         \Magento\Framework\HTTP\Header $httpHeader,
-        \Swarming\Kount\Model\Logger $logger,
-        \Swarming\Kount\Model\Config\Account $configAccount = null
+        \Kount\Ris\Model\Logger $logger,
+        \Kount\Ris\Model\Config\Account $configAccount = null
     ) {
         $this->appState = $appState;
         $this->customerRegistry = $customerRegistry;
@@ -146,12 +146,15 @@ class Order
      */
     protected function processShippingMethod(\Kount_Ris_Request_Inquiry $request, \Magento\Sales\Model\Order $order)
     {
-        $shippingFields = explode('_', $order->getShippingMethod());
-        if (!empty($shippingFields[0])) {
-            $request->setUserDefinedField(self::FIELD_CARRIER, $shippingFields[0]);
+        $shippingMethod = $order->getShippingMethod(true);
+        if (!$shippingMethod) {
+            return;
         }
-        if (!empty($shippingFields[1])) {
-            $request->setUserDefinedField(self::FIELD_METHOD, $shippingFields[1]);
+        if ($shippingMethod->getData('carrier_code')) {
+            $request->setUserDefinedField(self::FIELD_CARRIER, $shippingMethod->getData('carrier_code'));
+        }
+        if ($shippingMethod->getData('method')) {
+            $request->setUserDefinedField(self::FIELD_METHOD, $shippingMethod->getData('method'));
         }
     }
 
@@ -255,15 +258,24 @@ class Order
      */
     protected function processCart(\Kount_Ris_Request_Inquiry $request, \Magento\Sales\Model\Order $order)
     {
+        $realOrderItems = [];
+        $orderItems = $order->getAllItems();
+        foreach ($orderItems as $orderItem) {
+            if ($orderItem->getParentItem()) {
+                continue;
+            }
+            $realOrderItems[] = $orderItem;
+        }
+
         $cart = [];
-        /** @var \Magento\Sales\Model\Order\Item $item */
-        foreach ($order->getAllVisibleItems() as $item) {
+        /** @var \Magento\Sales\Model\Order\Item $realOrderItem */
+        foreach ($realOrderItems as $realOrderItem) {
             $cart[] = $this->cartItemFactory->create([
-                'productType' => $item->getSku(),
-                'itemName' => $item->getName(),
-                'description' => ($item->getDescription() ? $item->getDescription() : ''),
-                'quantity' => round($item->getQtyOrdered()),
-                'price' => $this->convertAndRoundAmount($item->getBasePrice(), $order->getBaseCurrencyCode()),
+                'productType' => $realOrderItem->getSku(),
+                'itemName' => $realOrderItem->getName(),
+                'description' => ($realOrderItem->getDescription() ? $realOrderItem->getDescription() : ''),
+                'quantity' => round($realOrderItem->getQtyOrdered()),
+                'price' => $this->convertAndRoundAmount($realOrderItem->getBasePrice(), $order->getBaseCurrencyCode()),
             ]);
         }
         $request->setCart($cart);

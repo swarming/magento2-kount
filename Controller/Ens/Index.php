@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Controller\Ens;
+namespace Kount\Ris\Controller\Ens;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Request\InvalidRequestException;
@@ -16,17 +16,17 @@ use Magento\Framework\Exception\LocalizedException;
 class Index extends Action implements \Magento\Framework\App\CsrfAwareActionInterface
 {
     /**
-     * @var \Swarming\Kount\Model\Config\Account
+     * @var \Kount\Ris\Model\Config\Account
      */
     protected $configAccount;
 
     /**
-     * @var \Swarming\Kount\Model\Config\Ens
+     * @var \Kount\Ris\Model\Config\Ens
      */
     protected $configEns;
 
     /**
-     * @var \Swarming\Kount\Model\Ens\Manager
+     * @var \Kount\Ris\Model\Ens\Manager
      */
     protected $ensManager;
 
@@ -36,25 +36,25 @@ class Index extends Action implements \Magento\Framework\App\CsrfAwareActionInte
     protected $remoteAddress;
 
     /**
-     * @var \Swarming\Kount\Model\Logger
+     * @var \Kount\Ris\Model\Logger
      */
     protected $logger;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
-     * @param \Swarming\Kount\Model\Config\Account $configAccount
-     * @param \Swarming\Kount\Model\Config\Ens $configEns
-     * @param \Swarming\Kount\Model\Ens\Manager $ensManager
+     * @param \Kount\Ris\Model\Config\Account $configAccount
+     * @param \Kount\Ris\Model\Config\Ens $configEns
+     * @param \Kount\Ris\Model\Ens\Manager $ensManager
      * @param \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remoteAddress
-     * @param \Swarming\Kount\Model\Logger $logger
+     * @param \Kount\Ris\Model\Logger $logger
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
-        \Swarming\Kount\Model\Config\Account $configAccount,
-        \Swarming\Kount\Model\Config\Ens $configEns,
-        \Swarming\Kount\Model\Ens\Manager $ensManager,
+        \Kount\Ris\Model\Config\Account $configAccount,
+        \Kount\Ris\Model\Config\Ens $configEns,
+        \Kount\Ris\Model\Ens\Manager $ensManager,
         \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remoteAddress,
-        \Swarming\Kount\Model\Logger $logger
+        \Kount\Ris\Model\Logger $logger
     ) {
         $this->configAccount = $configAccount;
         $this->configEns = $configEns;
@@ -76,10 +76,22 @@ class Index extends Action implements \Magento\Framework\App\CsrfAwareActionInte
             }
 
             if (!$this->isAllowed()) {
-                throw new AuthenticationException(__('Invalid ENS Ip Address.'));
+                throw new AuthenticationException(
+                    __('Invalid ENS Ip Address: ' . $this->remoteAddress->getRemoteAddress() . '. Please ensure you whitelist this ip address in the Magento Kount configuration settings')
+                );
             }
 
-            $xmlString = file_get_contents('php://input');
+            $xmlString = '<?xml version="1.0" encoding="UTF-8"?>
+<events merchant="900410" total="2">
+  <event>
+    <name>WORKFLOW_STATUS_EDIT</name>
+    <key site="JON" order_number="DEV000000028">DYKJ0KPH8Q4N</key>
+    <old_value>R</old_value>
+    <new_value>A</new_value>
+    <agent>ian@swarmingtech.com</agent>
+    <occurred>2021-03-16 12:11:21</occurred>
+  </event>
+</events>';
             $this->respondOnReceiptOfEvents();
             $response = $this->ensManager->handleRequest($xmlString);
             $this->logger->info($response);

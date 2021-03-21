@@ -1,24 +1,24 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Block\Checkout;
+namespace Kount\Ris\Block\Checkout;
 
 class DataCollector extends \Magento\Framework\View\Element\Template
 {
     /**
-     * @var \Swarming\Kount\Model\Session
+     * @var \Kount\Ris\Model\Session
      */
     private $kountSession;
 
     /**
-     * @var \Swarming\Kount\Model\Config\Account
+     * @var \Kount\Ris\Model\Config\Account
      */
     private $configAccount;
 
     /**
-     * @var \Swarming\Kount\Model\Config\PhoneToWeb
+     * @var \Kount\Ris\Model\Config\PhoneToWeb
      */
     private $configPhoneToWeb;
 
@@ -28,26 +28,26 @@ class DataCollector extends \Magento\Framework\View\Element\Template
     private $remoteAddress;
 
     /**
-     * @var \Swarming\Kount\Model\Logger
+     * @var \Kount\Ris\Model\Logger
      */
     private $logger;
 
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Swarming\Kount\Model\Session $kountSession
-     * @param \Swarming\Kount\Model\Config\Account $configAccount
-     * @param \Swarming\Kount\Model\Config\PhoneToWeb $configPhoneToWeb
+     * @param \Kount\Ris\Model\Session $kountSession
+     * @param \Kount\Ris\Model\Config\Account $configAccount
+     * @param \Kount\Ris\Model\Config\PhoneToWeb $configPhoneToWeb
      * @param \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remoteAddress
-     * @param \Swarming\Kount\Model\Logger $logger
+     * @param \Kount\Ris\Model\Logger $logger
      * @param array $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        \Swarming\Kount\Model\Session $kountSession,
-        \Swarming\Kount\Model\Config\Account $configAccount,
-        \Swarming\Kount\Model\Config\PhoneToWeb $configPhoneToWeb,
+        \Kount\Ris\Model\Session $kountSession,
+        \Kount\Ris\Model\Config\Account $configAccount,
+        \Kount\Ris\Model\Config\PhoneToWeb $configPhoneToWeb,
         \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remoteAddress,
-        \Swarming\Kount\Model\Logger $logger,
+        \Kount\Ris\Model\Logger $logger,
         array $data = []
     ) {
         $this->kountSession = $kountSession;
@@ -153,7 +153,7 @@ class DataCollector extends \Magento\Framework\View\Element\Template
         }
         return false;
     }
-    
+
     /**
      * @return string
      */

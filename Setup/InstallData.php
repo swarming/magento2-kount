@@ -1,15 +1,15 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Setup;
+namespace Kount\Ris\Setup;
 
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Sales\Model\Order;
-use Swarming\Kount\Model\Order\Ris as OrderRis;
+use Kount\Ris\Model\Order\Ris as OrderRis;
 
 class InstallData implements InstallDataInterface
 {
@@ -27,7 +27,7 @@ class InstallData implements InstallDataInterface
             ['status' => OrderRis::STATUS_KOUNT_REVIEW , 'label' => __('Review')],
             ['status' => OrderRis::STATUS_KOUNT_DECLINE , 'label' => __('Decline')],
         ];
-        $setup->getConnection()->insertArray($setup->getTable('sales_order_status'), ['status', 'label'], $status);
+        $setup->getConnection()->insertArray($setup->getTable('sales_order_status'), ['status', 'label'], $status, 4);
 
         /* Attach Kount statuses to holded order state */
         $states = [
@@ -37,7 +37,8 @@ class InstallData implements InstallDataInterface
         $setup->getConnection()->insertArray(
             $setup->getTable('sales_order_status_state'),
             ['status', 'state', 'is_default'],
-            $states
+            $states,
+            4
         );
     }
 }

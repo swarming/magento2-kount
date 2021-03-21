@@ -1,29 +1,29 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Model\Ens;
+namespace Kount\Ris\Model\Ens;
 
 class Manager
 {
     /**
-     * @var \Swarming\Kount\Model\Config\Account
+     * @var \Kount\Ris\Model\Config\Account
      */
     protected $configAccount;
 
     /**
-     * @var \Swarming\Kount\Model\Ens\EventHandlerFactory
+     * @var \Kount\Ris\Model\Ens\EventHandlerFactory
      */
     protected $eventHandlerFactory;
 
     /**
-     * @var \Swarming\Kount\Helper\Data
+     * @var \Kount\Ris\Helper\Data
      */
     protected $helperData;
 
     /**
-     * @var \Swarming\Kount\Model\Logger
+     * @var \Kount\Ris\Model\Logger
      */
     protected $logger;
 
@@ -33,17 +33,17 @@ class Manager
     protected $supportedEvents;
 
     /**
-     * @param \Swarming\Kount\Model\Config\Account $configAccount
-     * @param \Swarming\Kount\Model\Ens\EventHandlerFactory $eventHandlerFactory
-     * @param \Swarming\Kount\Helper\Data $helperData
-     * @param \Swarming\Kount\Model\Logger $logger
+     * @param \Kount\Ris\Model\Config\Account $configAccount
+     * @param \Kount\Ris\Model\Ens\EventHandlerFactory $eventHandlerFactory
+     * @param \Kount\Ris\Helper\Data $helperData
+     * @param \Kount\Ris\Model\Logger $logger
      * @param array $supportedEvents
      */
     public function __construct(
-        \Swarming\Kount\Model\Config\Account $configAccount,
-        \Swarming\Kount\Model\Ens\EventHandlerFactory $eventHandlerFactory,
-        \Swarming\Kount\Helper\Data $helperData,
-        \Swarming\Kount\Model\Logger $logger,
+        \Kount\Ris\Model\Config\Account $configAccount,
+        \Kount\Ris\Model\Ens\EventHandlerFactory $eventHandlerFactory,
+        \Kount\Ris\Helper\Data $helperData,
+        \Kount\Ris\Model\Logger $logger,
         array $supportedEvents
     ) {
         $this->configAccount = $configAccount;

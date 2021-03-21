@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Model\Observer;
+namespace Kount\Ris\Model\Observer;
 
 class ConditionFactory
 {
@@ -23,14 +23,14 @@ class ConditionFactory
 
     /**
      * @param string $className
-     * @return \Swarming\Kount\Model\Observer\ConditionInterface
+     * @return \Kount\Ris\Model\Observer\ConditionInterface
      * @throws \InvalidArgumentException
      */
     public function create($className)
     {
         $skipCondition = $this->objectManager->create($className);
         if (!$skipCondition instanceof ConditionInterface) {
-            throw new \InvalidArgumentException(get_class($skipCondition) . ' must be an instance of \Swarming\Kount\Model\Observer\ConditionInterface.');
+            throw new \InvalidArgumentException(get_class($skipCondition) . ' must be an instance of \Kount\Ris\Model\Observer\ConditionInterface.');
         }
         return $skipCondition;
     }

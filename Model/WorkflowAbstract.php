@@ -1,31 +1,31 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Model;
+namespace Kount\Ris\Model;
 
-use Swarming\Kount\Model\Order\ActionFactory as OrderActionFactory;
+use Kount\Ris\Model\Order\ActionFactory as OrderActionFactory;
 
 abstract class WorkflowAbstract implements WorkflowInterface
 {
     /**
-     * @var \Swarming\Kount\Model\Config\Workflow
+     * @var \Kount\Ris\Model\Config\Workflow
      */
     protected $configWorkflow;
 
     /**
-     * @var \Swarming\Kount\Model\RisService
+     * @var \Kount\Ris\Model\RisService
      */
     protected $risService;
 
     /**
-     * @var \Swarming\Kount\Model\Order\ActionFactory
+     * @var \Kount\Ris\Model\Order\ActionFactory
      */
     protected $orderActionFactory;
 
     /**
-     * @var \Swarming\Kount\Model\Order\Ris
+     * @var \Kount\Ris\Model\Order\Ris
      */
     protected $orderRis;
 
@@ -35,25 +35,25 @@ abstract class WorkflowAbstract implements WorkflowInterface
     protected $orderRepository;
 
     /**
-     * @var \Swarming\Kount\Model\Logger
+     * @var \Kount\Ris\Model\Logger
      */
     protected $logger;
 
     /**
-     * @param \Swarming\Kount\Model\Config\Workflow $configWorkflow
-     * @param \Swarming\Kount\Model\RisService $risService
-     * @param \Swarming\Kount\Model\Order\ActionFactory $orderActionFactory
-     * @param \Swarming\Kount\Model\Order\Ris $orderRis
+     * @param \Kount\Ris\Model\Config\Workflow $configWorkflow
+     * @param \Kount\Ris\Model\RisService $risService
+     * @param \Kount\Ris\Model\Order\ActionFactory $orderActionFactory
+     * @param \Kount\Ris\Model\Order\Ris $orderRis
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
-     * @param \Swarming\Kount\Model\Logger $logger
+     * @param \Kount\Ris\Model\Logger $logger
      */
     public function __construct(
-        \Swarming\Kount\Model\Config\Workflow $configWorkflow,
-        \Swarming\Kount\Model\RisService $risService,
-        \Swarming\Kount\Model\Order\ActionFactory $orderActionFactory,
-        \Swarming\Kount\Model\Order\Ris $orderRis,
+        \Kount\Ris\Model\Config\Workflow $configWorkflow,
+        \Kount\Ris\Model\RisService $risService,
+        \Kount\Ris\Model\Order\ActionFactory $orderActionFactory,
+        \Kount\Ris\Model\Order\Ris $orderRis,
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
-        \Swarming\Kount\Model\Logger $logger
+        \Kount\Ris\Model\Logger $logger
     ) {
         $this->configWorkflow = $configWorkflow;
         $this->risService = $risService;

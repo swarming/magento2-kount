@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Model\Config;
+namespace Kount\Ris\Model\Config;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
@@ -38,7 +38,7 @@ class Ens
      */
     public function getKountIps()
     {
-        $ips = $this->scopeConfig->getValue('swarming_kount/ens/kount_ips');
+        $ips = $this->scopeConfig->getValue('kount_ris/ens/kount_ips');
         return $this->explodeIps($ips);
     }
 
@@ -48,8 +48,46 @@ class Ens
      */
     public function getAdditionIps($websiteCode = null)
     {
-        $ips = $this->scopeConfig->getValue('swarming_kount/ens/addition_ips', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+        $ips = $this->scopeConfig->getValue('kount_ris/ens/addition_ips', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
         return $this->explodeIps($ips);
+    }
+
+    /**
+     *
+     * @param $ip
+     * @param array $ips
+     * @return bool
+     */
+    private function isInCidrRange($ip, array $ips) : bool
+    {
+        $cidrRanges = array_filter(
+            $ips,
+            function ($ipAddress) {
+                return strpos($ipAddress, '/') !== false;
+            }
+        );
+
+        if (empty($cidrRanges)) {
+            return false;
+        }
+
+        $longIp = ip2long($ip);
+        if (!$longIp) {
+            return false;
+        }
+
+        foreach ($cidrRanges as $cidrIp) {
+            $cidr = explode('/', $cidrIp);
+            $range[0] = long2ip((ip2long($cidr[0])) & ((-1 << (32 - (int)$cidr[1]))));
+            $range[1] = long2ip((ip2long($range[0])) + pow(2, (32 - (int)$cidr[1])) - 1);
+            $rangeStart = ip2long($range[0]);
+            $rangeEnd = ip2long($range[1]);
+            if ($rangeStart <= $longIp && $longIp <= $rangeEnd) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -68,7 +106,8 @@ class Ens
      */
     public function isAllowedIp($ip, $websiteCode = null)
     {
-        return in_array($ip, $this->getAllowedIps($websiteCode), true);
+        $allowedIps = $this->getAllowedIps($websiteCode);
+        return in_array($ip, $allowedIps, true) || $this->isInCidrRange($ip, $allowedIps) ;
     }
 
     /**
@@ -77,6 +116,6 @@ class Ens
      */
     public function isEnabled($websiteCode = null)
     {
-        return (bool)$this->scopeConfig->getValue('swarming_kount/ens/enabled', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+        return (bool)$this->scopeConfig->getValue('kount_ris/ens/enabled', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
     }
 }

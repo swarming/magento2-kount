@@ -1,13 +1,13 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Observer;
+namespace Kount\Ris\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Exception\LocalizedException;
-use Swarming\Kount\Model\Config\Source\DeclineAction;
+use Kount\Ris\Model\Config\Source\DeclineAction;
 use Magento\Sales\Model\Order;
 
 class SubmitAllAfter implements \Magento\Framework\Event\ObserverInterface
@@ -20,43 +20,43 @@ class SubmitAllAfter implements \Magento\Framework\Event\ObserverInterface
     ];
 
     /**
-     * @var \Swarming\Kount\Helper\Workflow
+     * @var \Kount\Ris\Helper\Workflow
      */
     protected $helperWorkflow;
 
     /**
-     * @var \Swarming\Kount\Model\Config\Workflow
+     * @var \Kount\Ris\Model\Config\Workflow
      */
     protected $configWorkflow;
 
     /**
-     * @var \Swarming\Kount\Model\WorkflowFactory
+     * @var \Kount\Ris\Model\WorkflowFactory
      */
     protected $workflowFactory;
 
     /**
-     * @var \Swarming\Kount\Model\Observer\ConditionInterface
+     * @var \Kount\Ris\Model\Observer\ConditionInterface
      */
     protected $condition;
 
     /**
-     * @var \Swarming\Kount\Model\Logger
+     * @var \Kount\Ris\Model\Logger
      */
     protected $logger;
 
     /**
-     * @param \Swarming\Kount\Helper\Workflow $helperWorkflow
-     * @param \Swarming\Kount\Model\Config\Workflow $configWorkflow
-     * @param \Swarming\Kount\Model\WorkflowFactory $workflowFactory
-     * @param \Swarming\Kount\Model\Observer\ConditionInterface $condition
-     * @param \Swarming\Kount\Model\Logger $logger
+     * @param \Kount\Ris\Helper\Workflow $helperWorkflow
+     * @param \Kount\Ris\Model\Config\Workflow $configWorkflow
+     * @param \Kount\Ris\Model\WorkflowFactory $workflowFactory
+     * @param \Kount\Ris\Model\Observer\ConditionInterface $condition
+     * @param \Kount\Ris\Model\Logger $logger
      */
     public function __construct(
-        \Swarming\Kount\Helper\Workflow $helperWorkflow,
-        \Swarming\Kount\Model\Config\Workflow $configWorkflow,
-        \Swarming\Kount\Model\WorkflowFactory $workflowFactory,
-        \Swarming\Kount\Model\Observer\ConditionInterface $condition,
-        \Swarming\Kount\Model\Logger $logger
+        \Kount\Ris\Helper\Workflow $helperWorkflow,
+        \Kount\Ris\Model\Config\Workflow $configWorkflow,
+        \Kount\Ris\Model\WorkflowFactory $workflowFactory,
+        \Kount\Ris\Model\Observer\ConditionInterface $condition,
+        \Kount\Ris\Model\Logger $logger
     ) {
         $this->helperWorkflow = $helperWorkflow;
         $this->configWorkflow = $configWorkflow;
@@ -73,25 +73,25 @@ class SubmitAllAfter implements \Magento\Framework\Event\ObserverInterface
     {
         $this->logger->info('checkout_submit_all_after Start');
 
-        /** @var \Magento\Sales\Model\Order $order */
-        $order = $observer->getEvent()->getData('order');
-        $payment = $order->getPayment();
+        $event = $observer->getEvent();
+        $orders = $event->getOrders() ?: [$event->getOrder()];
 
-        if (!$this->helperWorkflow->isProcessable($order)) {
-            return;
-        }
+        foreach ($orders as $order) {
+            $payment = $order->getPayment();
+            if (!$this->helperWorkflow->isProcessable($order)) {
+                continue;
+            }
+            if (!$this->condition->is($payment, $order->getStoreId())) {
+                $this->logger->info("Skip for {$payment->getMethod()} payment method.");
+                continue;
+            }
 
-        if (!$this->condition->is($payment, $order->getStoreId())) {
-            $this->logger->info("Skip for {$payment->getMethod()} payment method.");
-            return;
-        }
-
-        $workflow = $this->workflowFactory->create($this->configWorkflow->getWorkflowMode($order->getStoreId()));
-        $workflow->success($order);
-
-        $status = $order->getStatus();
-        if (in_array($status, self::REVIEW_STATUSES)) {
-            throw new LocalizedException(__('Order declined. Please ensure your information is correct. If the problem persists, please contact us for assistance.'));
+            $workflow = $this->workflowFactory->create($this->configWorkflow->getWorkflowMode($order->getStoreId()));
+            $workflow->success($order);
+            $status = $order->getStatus();
+            if (in_array($status, self::REVIEW_STATUSES)) {
+                throw new LocalizedException(__('Order declined. Please ensure your information is correct. If the problem persists, please contact us for assistance.'));
+            }
         }
 
         $this->logger->info('checkout_submit_all_after Done');

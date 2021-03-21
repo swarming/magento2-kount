@@ -1,23 +1,23 @@
 <?php
 /**
- * Copyright (c) 2017 KOUNT, INC.
+ * Copyright (c) 2021 KOUNT, INC.
  * See COPYING.txt for license details.
  */
-namespace Swarming\Kount\Model\Ris\Base\Builder;
+namespace Kount\Ris\Model\Ris\Base\Builder;
 
 class Session
 {
     /**
-     * @var \Swarming\Kount\Model\Session
+     * @var \Kount\Ris\Model\Session
      */
     protected $kountSession;
 
     /**
      * Session constructor.
-     * @param \Swarming\Kount\Model\Session $kountSession
+     * @param \Kount\Ris\Model\Session $kountSession
      */
     public function __construct(
-        \Swarming\Kount\Model\Session $kountSession
+        \Kount\Ris\Model\Session $kountSession
     ) {
         $this->kountSession = $kountSession;
     }
